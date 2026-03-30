@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LexonStock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #101010;
+            --panel: #101010;
+            --text: rgb(232, 233, 239);
+            --muted: #dfdfdf;
+            --border: #1a1a1a;
+            --accent: #8da7ff;
+            --accent-2: #afbbff;
+            --success: #46bb75;
+            --warning: #ca9e38;
+            --danger: #cd3737;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'DM Sans';
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        header {
+            font-family: 'DM Sans';
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        .nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            color: rgb(183, 197, 255);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links button {
+            border: none;
+            background: none;
+            color: var(--text);
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .nav-links button.active {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 20px 40px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero,
+        .card {
+            background: none;
+            border-radius: 8px;
+        }
+
+        .hero {
+            padding: 28px;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 49px;
+            color: var(--text);
+            text-align: center;
+        }
+
+        .simple{
+            background-color: #6191ffae;
+            padding: 3px;
+        }
+
+        .hero p {
+            margin: 0 0 18px;
+            color: rgb(175, 202, 252);
+            align-self: center;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 21px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            padding: 22px;
+        }
+
+        .ai{
+            background-color: #6191ffae;
+            padding:3px;
+        }
+
+        .span-12 { grid-column: span 12; }
+        .span-8 { grid-column: span 8; }
+        .span-6 { grid-column: span 6; }
+        .span-4 { grid-column: span 4; }
+
+        @media (max-width: 900px) {
+            .span-8, .span-6, .span-4 {
+                grid-column: span 12;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+        }
+
+        .section-title {
+            margin: 0 0 10px;
+            font-size: 45px;
+            color: #9ab0e0;
+            text-align: center;
+        }
+
+        .muted {
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 720px) {
+            .stat-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat {
+            border: rgb(30, 30, 30);
+            border-radius: 12px;
+            padding: 14px;
+            background: #131313;
+        }
+
+        .stat .label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .stat .value {
+            font-size: 27px;
+            font-weight: 700;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: rgb(161, 161, 255);
+            outline: none;
+            background-color: #101010;
+            font-weight: 400;
+            font-size: 18px;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+        }
+
+        .input-row {
+            color: #afbbff;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .input-row .btn {
+            min-width: 140px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid var(--border);
+            background: #191919;
+            margin-right: 8px;
+            margin-top: 6px;
+        }
+
+        .badge.buy { color: var(--success); }
+        .badge.hold { color: var(--warning); }
+        .badge.avoid { color: var(--danger); }
+
+        .result-block {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        footer {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px 28px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        .adv-head{
+            margin-top: 200px;
+            color: rgb(220, 220, 220);
+            text-align: center;
+            font-size: 38px;
+        }
+
+        .container{
+            font-size: 24px;
+            text-align: center;
+            border-color: #afbbff;
+            border-width: 2px;
+            padding: 6px;
+            border-radius: 12px;
+            background:none;
+        }
+        p{
+            color:#9ab0e0;
+            font-weight: 700;
+        }
+
+        summary{
+            color: #b2c0df;
+        }
+        .btn-primary{
+            color: #111111;
+            background-color: #7997fa;
+            border: none;
+            border-radius: 18px;
+            font-size: 21px;
+            padding:7px;
+            width: auto;
+            text-align: center;
+            align-items: center;
+            align-content: center;
+            font-weight: 600;
+            transition: font-weight 0.2s;
+            margin-left: 460px;
+            margin-top: 18px;
+        }
+        .btn{
+            color: #111111;
+            background-color: #7997fa;
+            border: none;
+            border-radius: 18px;
+            font-size: 21px;
+            padding:7px;
+            width: auto;
+            text-align: center;
+            align-items: center;
+            align-content: center;
+            font-weight: 600;
+            transition: font-weight 0.2s;
+        }
+
+        .btn:hover{
+            background-color: #9cb2fd;
+        }
+        .btn-primary:hover{
+            background-color: #9cb2fd;
+        }
+    </style>
+</head>
+<body align="center">
+    <header>
+        <div class="nav">
+            <div class="brand">LexonStocks</div>
+            <div class="nav-links">
+                <button id="navLanding" class="active" onclick="showPage('landing')">Landing</button>
+                <button id="navBest" onclick="showPage('best')">Best Stock</button>
+                <button id="navAnalyze" onclick="showPage('analyze')">Analyse Stock</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="landingPage" class="page active">
+            <div class="hero">
+                <h1><span class="simple">Simple</span> stock insights with <span class="ai">AI</span> news recommendations</h1>
+                <p>
+                    This app checks stock price data, asks AI to read the news sentiment, and shows the best stock
+                    to watch. The interface is clean, professional, and easy to use.
+                </p>
+            </div>
+            <div class="advantages">
+            <h1 class="adv-head">Why LexonStocks?</h1>
+            <div class="container">
+                        <details>
+                            <summary>Aren't news channels faster?</summary>
+                            <p>We have specialized AI agents that explore the whole internet for the best accuracy and speed.</p>
+                        </details>
+                        <details>
+                            <summary>Humans invest better than AI?</summary>
+                            <p>Our A.I. models have been trained on the data of each company for the past 5-12 years to get quality predictions. Our M.L. models predict for the next 30 days for accuracy.</p>
+                        </details>
+                        <details>
+                            <summary>Doesn't it need internet to run?</summary>
+                            <p>LexonStocs has maintained the need to keep stock prediction completely local, making it accessable anywhere.</p>
+                        </details>
+            </div>
+        </section>
+                
+        </div>
+
+        <section id="bestPage" class="page">
+            <div class="grid">
+                <div class="card span-12">
+                    <h2 class="section-title">Best Stock</h2>
+                    <p class="muted">This page shows the stock with the strongest AI-based recommendation.</p>
+                    <button class="btn primary" onclick="loadBestStock()">Refresh Best Stock</button>
+
+                    <div id="bestStockBox" class="result-block">
+                        <p class="muted">Press refresh to load the best stock.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="analyzePage" class="page">
+            <div class="grid">
+                <div class="card span-12">
+                    <h2 class="section-title">Analyse Stock</h2>
+                    <p class="muted">Enter a ticker like AAPL, MSFT, NVDA, or TSLA.</p>
+
+                    <div class="input-row">
+                        <input type="text" id="tickerInput" placeholder="Enter ticker" />
+                        <button class="btn-primary" onclick="analyzeTicker()" align="center">Analyse</button>
+                    </div>
+
+                    <div id="analysisBox" class="result-block">
+                        <p class="muted">No analysis yet.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const pages = {
+            landing: document.getElementById("landingPage"),
+            best: document.getElementById("bestPage"),
+            analyze: document.getElementById("analyzePage"),
+        };
+
+        const navButtons = {
+            landing: document.getElementById("navLanding"),
+            best: document.getElementById("navBest"),
+            analyze: document.getElementById("navAnalyze"),
+        };
+
+        function showPage(pageName) {
+            Object.keys(pages).forEach(name => {
+                pages[name].classList.remove("active");
+                navButtons[name].classList.remove("active");
+            });
+
+            pages[pageName].classList.add("active");
+            navButtons[pageName].classList.add("active");
+        }
+
+        function recClass(recommendation) {
+            const value = (recommendation || "").toLowerCase();
+            if (value === "buy") return "buy";
+            if (value === "avoid") return "avoid";
+            return "hold";
+        }
+
+        function escapeHtml(text) {
+            return String(text || "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function renderStock(data) {
+            if (data.error) {
+                return `<p class="muted">${escapeHtml(data.error)}</p>`;
+            }
+
+            const cls = recClass(data.recommendation);
+            return `
+                <h3>${escapeHtml(data.ticker)}</h3>
+
+                <div class="stat-row">
+                    <div class="stat">
+                        <div class="label">Current Price</div>
+                        <div class="value">$${Number(data.current_price).toFixed(2)}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">Predicted Next Day</div>
+                        <div class="value">$${Number(data.predicted_price).toFixed(2)}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">Expected Change</div>
+                        <div class="value">${Number(data.predicted_change_pct).toFixed(2)}%</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <span class="badge ${cls}">Recommendation: ${escapeHtml(data.recommendation)}</span>
+                    <span class="badge">Sentiment: ${escapeHtml(data.sentiment)}</span>
+                    <span class="badge">Invest now: ${escapeHtml(data.invest_decision)}</span>
+                </div>
+
+                <div class="result-block">
+                    <p><strong>AI Summary:</strong> ${escapeHtml(data.summary)}</p>
+                    <p><strong>Reason:</strong> ${escapeHtml(data.reason || "No reason provided.")}</p>
+                </div>
+            `;
+        }
+
+        async function loadBestStock() {
+            const box = document.getElementById("bestStockBox");
+            box.innerHTML = `<p class="muted">Loading best stock...</p>`;
+
+            try {
+                const res = await fetch("/api/best_stock");
+                const data = await res.json();
+                box.innerHTML = renderStock(data);
+            } catch (error) {
+                box.innerHTML = `<p class="muted">Error loading best stock.</p>`;
+            }
+        }
+
+        async function analyzeTicker() {
+            const ticker = document.getElementById("tickerInput").value.trim().toUpperCase();
+            const box = document.getElementById("analysisBox");
+
+            if (!ticker) {
+                box.innerHTML = `<p class="muted">Please enter a ticker symbol.</p>`;
+                return;
+            }
+
+            box.innerHTML = `<p class="muted">Analysing ${escapeHtml(ticker)}...</p>`;
+
+            try {
+                const res = await fetch("/api/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ticker })
+                });
+
+                const data = await res.json();
+                box.innerHTML = renderStock(data);
+            } catch (error) {
+                box.innerHTML = `<p class="muted">Error analysing stock.</p>`;
+            }
+        }
+
+        // Load best stock when opening the page if the user goes directly there
+        window.addEventListener("load", () => {
+            loadBestStock();
+        });
+    </script>
+</body>
+</html>
