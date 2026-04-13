@@ -18,16 +18,12 @@ STOCKS = [
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "qwen3-vl:235b-cloud"
-
-# ---------- LOGGING ----------
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s"
 )
 logger = logging.getLogger("stock-oracle")
 
-
-# ---------- DATA ----------
 def get_stock_data(ticker, period="6mo"):
     logger.info("Fetching price data for %s", ticker)
     try:
@@ -41,7 +37,6 @@ def get_stock_data(ticker, period="6mo"):
         return None
 
 
-# ---------- ML ----------
 def train_model(prices):
     if len(prices) < 20:
         logger.warning("Not enough data to train model")
@@ -69,16 +64,12 @@ def predict_next_day(model, scaler, last_5):
     pred = scaler.inverse_transform([[pred_scaled]])[0][0]
     return float(pred)
 
-
-# ---------- AI NEWS ANALYSIS ----------
 def parse_ai_response(text):
     """
     Tries to parse JSON from Ollama.
     Falls back to simple text extraction if needed.
     """
     cleaned = text.strip()
-
-    # Remove markdown code fences if the model adds them
     if cleaned.startswith("```"):
         cleaned = cleaned.replace("```json", "").replace("```", "").strip()
 
@@ -163,8 +154,6 @@ Be careful: make the recommendation based mostly on news sentiment and company o
             "reason": "AI service failed."
         }
 
-
-# ---------- ANALYSIS ----------
 def analyze_stock(ticker):
     ticker = ticker.upper().strip()
     logger.info("Starting full analysis for %s", ticker)
@@ -198,8 +187,6 @@ def analyze_stock(ticker):
         "Hold": 2,
         "Avoid": 0
     }.get(ai["recommendation"], 2)
-
-    # AI-driven first, price trend is secondary
     final_score = (recommendation_score * 100) + (sentiment_score * 10) + predicted_change_pct
 
     invest_decision = "Yes" if ai["recommendation"] == "Buy" else "No"
@@ -250,8 +237,6 @@ def find_best_stock():
     logger.info("Best stock found: %s", best["ticker"])
     return best
 
-
-# ---------- ROUTES ----------
 @app.route("/")
 def home():
     logger.info("Serving landing page")
